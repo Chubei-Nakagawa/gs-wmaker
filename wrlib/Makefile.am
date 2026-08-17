@@ -3,6 +3,9 @@
 SUBDIRS = . po
 DIST_SUBDIRS = $(SUBDIRS) tests
 
+dist-hook:
+	rm -f $(distdir)/tests/Makefile
+
 AUTOMAKE_OPTIONS =
 
 EXTRA_DIST = tests
