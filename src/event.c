@@ -1476,6 +1476,63 @@ static void startMarkCapture(WScreen *scr, Display *dpy, WMarkCaptureMode mode)
 	XGrabKeyboard(dpy, scr->root_win, False, GrabModeAsync, GrabModeAsync, CurrentTime);
 }
 
+/*
+ * Warp pointer to the center of the next monitor, cycling.
+ *
+ * Monitors are the Xinerama/RandR heads of every managed screen,
+ * visited in (screen, head) order starting from the head the pointer
+ * is on. With one head per screen this reduces to hopping from X11
+ * screen to X11 screen as before.
+ */
+static void warpPointerToNextMonitor(WScreen *scr)
+{
+	WMRect rect;
+	WScreen *target;
+	int total, current, next;
+	int i, h;
+
+	total = 0;
+	for (i = 0; i < w_global.screen_count; i++)
+		total += wXineramaHeads(wScreenWithNumber(i));
+
+	if (total <= 1)
+		return;
+
+	/* flat index of the monitor the pointer is currently on */
+	current = 0;
+	for (i = 0; i < w_global.screen_count; i++) {
+		if (wScreenWithNumber(i) == scr) {
+			h = wGetHeadForPointerLocation(scr);
+			if (h < 0 || h >= wXineramaHeads(scr))
+				h = 0;
+			current += h;
+			break;
+		}
+		current += wXineramaHeads(wScreenWithNumber(i));
+	}
+
+	next = (current + 1) % total;
+
+	/* map the flat index back to a (screen, head) pair */
+	target = NULL;
+	for (i = 0; i < w_global.screen_count; i++) {
+		target = wScreenWithNumber(i);
+		h = wXineramaHeads(target);
+		if (next < h)
+			break;
+		next -= h;
+		target = NULL;
+	}
+	if (!target)
+		return;
+
+	rect = wGetRectForHead(target, next);
+	XWarpPointer(dpy, None, target->root_win, 0, 0, 0, 0,
+		     rect.pos.x + (int)rect.size.width / 2,
+		     rect.pos.y + (int)rect.size.height / 2);
+	XFlush(dpy);
+}
+
 static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent *event)
 {
 	short widx;
@@ -1898,26 +1955,7 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		break;
 
 	case WKBD_SWITCH_SCREEN:
-		if (w_global.screen_count > 1) {
-			WScreen *scr2;
-			int i;
-
-			/* find index of this screen */
-			for (i = 0; i < w_global.screen_count; i++) {
-				if (wScreenWithNumber(i) == scr)
-					break;
-			}
-			i++;
-			if (i >= w_global.screen_count) {
-				i = 0;
-			}
-			scr2 = wScreenWithNumber(i);
-
-			if (scr2) {
-				XWarpPointer(dpy, scr->root_win, scr2->root_win, 0, 0, 0, 0,
-					     scr2->scr_width / 2, scr2->scr_height / 2);
-			}
-		}
+		warpPointerToNextMonitor(scr);
 		break;
 
 	case WKBD_RUN:

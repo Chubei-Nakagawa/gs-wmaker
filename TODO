@@ -47,8 +47,6 @@ Never: (so, dont even bother to ask)
 ======
 - different themes for each workspace. Unless you give us a SGI/Power Onyx
   with 2 CPUs ;).
-- anything that requires the mouse pointer to be jumped by WindowMaker to
-  somewhere. This is *terrible* behaviour. And it's not just IMO.
 - rewrite to use Gtk... I wont even bother to explain why...
 
 
