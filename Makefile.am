@@ -146,6 +146,7 @@ configure-documentation:
 		--ignore-prg 'with-aix-soname # new in libtool 2.4.4 up to 2.5.2' \
 		--ignore-prg 'enable-aix-soname # renamed in libtool 2.5.3' \
 		--ignore-prg 'enable-pic # new in libtool 2.5.3' \
+		--ignore-prg 'enable-cxx-stdlib # new in libtool 2.6.0' \
 		--ignore-prg 'with-x # no use, it would not work without X'
 
 .PHONY: configure-documentation
