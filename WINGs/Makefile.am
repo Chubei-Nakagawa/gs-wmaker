@@ -7,7 +7,7 @@ DIST_SUBDIRS = $(SUBDIRS) Tests Examples Extras
 
 dist-hook:
 	rm -f  $(distdir)/Examples/Makefile $(distdir)/Extras/Makefile \
-		$(distdir)/Test/Makefile
+		$(distdir)/Tests/Makefile
 
 libWINGs_la_LDFLAGS = -version-info @WINGS_VERSION@
 libWUtil_la_LDFLAGS = -version-info @WUTIL_VERSION@
