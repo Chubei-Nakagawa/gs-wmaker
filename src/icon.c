@@ -911,6 +911,7 @@ static void miniwindowMouseDown(WObjDescriptor *desc, XEvent *event)
 			wSelectWindow(icon->owner, !wwin->flags.selected);
 		}
 	} else if (event->xbutton.button == Button3) {
+#ifdef ORIGINAL_WMAKER
 		WObjDescriptor *desc;
 
 		OpenMiniwindowMenu(wwin, event->xbutton.x_root, event->xbutton.y_root);
@@ -919,6 +920,7 @@ static void miniwindowMouseDown(WObjDescriptor *desc, XEvent *event)
 		desc = &wwin->screen_ptr->window_menu->menu->descriptor;
 		event->xbutton.send_event = True;
 		(*desc->handle_mousedown) (desc, event);
+#endif
 
 		return;
 	}

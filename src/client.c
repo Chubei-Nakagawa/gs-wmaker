@@ -574,11 +574,13 @@ void wClientCheckProperty(WWindow * wwin, XPropertyEvent * event)
 
 			wapp = wApplicationOf(wwin->main_window);
 			if (wapp) {
+#ifdef ORIGINAL_WMAKER
 				if (wapp->menu) {
 					/* update menu */
 					/* TODO: remake appmenu update */
 					wAppMenuDestroy(wapp->menu);
 				}
+#endif
 				if (wwin->fake_group) {
 					WScreen *scr = wwin->screen_ptr;
 					WWindow *foo = scr->focused_window;

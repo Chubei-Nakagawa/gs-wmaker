@@ -538,6 +538,7 @@ static void wRandR_Update(WScreen *scr)
     i = scr->xine_info.primary_head;
     wRandR_ApplyToXinerama(scr, state);
 
+#ifdef ORIGINAL_WMAKER
     /* Move the dock if needed */
     if (scr->dock &&
         ((scr->xine_info.primary_head != i && wPreferences.keep_dock_on_primary_head) ||
@@ -557,6 +558,7 @@ static void wRandR_Update(WScreen *scr)
                 wClipSnapToHead(clip);
         }
     }
+#endif
 
     /* Refresh usable areas and EWMH hints */
     wScreenUpdateUsableArea(scr);

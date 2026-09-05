@@ -23,6 +23,7 @@
 #define WMDOCK_H_
 
 #include "appicon.h"
+#ifdef ORIGINAL_WMAKER
 
 typedef struct WDock {
     WScreen *screen_ptr;
@@ -99,7 +100,9 @@ int wDockReceiveDNDDrop(WScreen *scr, XEvent *event);
 
 void wClipIconPaint(WAppIcon *aicon);
 void wClipSaveState(WScreen *scr);
+#ifdef ORIGINAL_WMAKER
 WMPropList *wClipSaveWorkspaceState(WScreen *scr, int workspace);
+#endif
 WAppIcon *wClipRestoreState(WScreen *scr, WMPropList *clip_state);
 
 void wDrawerIconPaint(WAppIcon *dicon);
@@ -107,7 +110,9 @@ void wDrawersSaveState(WScreen *scr);
 void wDrawersRestoreState(WScreen *scr);
 int wIsADrawer(WAppIcon *aicon);
 
+#ifdef ORIGINAL_WMAKER
 void wClipUpdateForWorkspaceChange(WScreen *scr, int workspace);
+#endif
 
 RImage *wClipMakeTile(RImage *normalTile);
 RImage* wDrawerMakeTile(WScreen *scr, RImage *normalTile);
@@ -125,4 +130,5 @@ typedef enum
 
 int wClipMakeIconOmnipresent(WAppIcon *aicon, int omnipresent);
 
+#endif
 #endif

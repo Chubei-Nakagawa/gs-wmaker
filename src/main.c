@@ -649,11 +649,14 @@ static int real_main(int argc, char **argv)
 				wPreferences.flags.restarting = 1;
 			} else if (strcmp(argv[i], "--for-real-") == 0) {
 				wPreferences.flags.restarting = 2;
+#ifdef ORIGINAL_WMAKER
 			} else if (strcmp(argv[i], "-no-autolaunch") == 0
 				   || strcmp(argv[i], "--no-autolaunch") == 0) {
 				wPreferences.flags.noautolaunch = 1;
+#endif
 			} else if (strcmp(argv[i], "-dont-restore") == 0 || strcmp(argv[i], "--dont-restore") == 0) {
 				wPreferences.flags.norestore = 1;
+#ifdef ORIGINAL_WMAKER
 			} else if (strcmp(argv[i], "-nodock") == 0 || strcmp(argv[i], "--no-dock") == 0) {
 				wPreferences.flags.nodock = 1;
 				wPreferences.flags.nodrawer = 1;
@@ -664,6 +667,7 @@ static int real_main(int argc, char **argv)
 #ifdef USE_ICCCM_WMREPLACE
 			} else if (strcmp(argv[i], "-replace") == 0 || strcmp(argv[i], "--replace") == 0) {
 				wPreferences.flags.replace = 1;
+#endif
 #endif
 			} else if (strcmp(argv[i], "-version") == 0 || strcmp(argv[i], "--version") == 0) {
 				printf("Window Maker %s\n", VERSION);

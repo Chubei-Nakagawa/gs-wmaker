@@ -19,6 +19,7 @@
  *  You should have received a copy of the GNU General Public License along
  *  with this program; if not, see <https://www.gnu.org/licenses/>.
  */
+#ifdef ORIGINAL_WMAKER
 
 #include "wconfig.h"
 
@@ -1761,3 +1762,4 @@ void OpenRootMenu(WScreen * scr, int x, int y, int keyboard)
 	if (scr->flags.root_menu_changed_shortcuts)
 		rebindKeygrabs(scr);
 }
+#endif

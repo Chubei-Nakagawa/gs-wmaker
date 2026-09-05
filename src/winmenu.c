@@ -243,7 +243,9 @@ static void execMenuCommand(WMenu * menu, WMenuEntry * entry)
 	WWindow *wwin = (WWindow *) entry->clientdata;
 	WApplication *wapp;
 
+#ifdef ORIGINAL_WMAKER
 	CloseWindowMenu(menu->frame->screen_ptr);
+#endif
 
 	switch (entry->order) {
 	case MC_CLOSE:
@@ -515,6 +517,7 @@ static void updateMaximizeMenu(WMenu * menu, WWindow * wwin)
 	wMenuRealize(smenu);
 }
 
+#ifdef ORIGINAL_WMAKER
 static WMenu *makeWorkspaceMenu(WScreen * scr)
 {
 	WMenu *menu;
@@ -856,3 +859,4 @@ void DestroyWindowMenu(WScreen *scr)
 		scr->window_menu = NULL;
 	}
 }
+#endif

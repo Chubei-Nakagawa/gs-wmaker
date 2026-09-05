@@ -21,10 +21,12 @@
 #ifndef WMWINMENU_H
 #define WMWINMENU_H
 
+#ifdef ORIGINAL_WMAKER
 void OpenWindowMenu(WWindow *wwin, int x, int y, int keyboard);
 void OpenWindowMenu2(WWindow *wwin, int x, int y, int keyboard);
 void OpenMiniwindowMenu(WWindow *wwin, int x, int y);
 void CloseWindowMenu(WScreen *scr);
 void DestroyWindowMenu(WScreen *scr);
+#endif
 
 #endif /* WMWINMENU_H */

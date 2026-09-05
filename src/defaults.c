@@ -105,8 +105,10 @@ static WDECallbackConvert getPropList;
 /* value setting functions */
 static WDECallbackUpdate setJustify;
 static WDECallbackUpdate setClearance;
+#ifdef ORIGINAL_WMAKER
 static WDECallbackUpdate setIfDockPresent;
 static WDECallbackUpdate setClipMergedInDock;
+#endif
 static WDECallbackUpdate setWrapAppiconsInDock;
 static WDECallbackUpdate setStickyIcons;
 static WDECallbackUpdate setWidgetColor;
@@ -154,7 +156,9 @@ static WDECallbackUpdate setHotCornerActions;
 
 static WDECallbackConvert getCursor;
 static WDECallbackUpdate setCursor;
+#ifdef ORIGINAL_WMAKER
 static WDECallbackUpdate updateDock;
+#endif
 
 /*
  * Tables to convert strings to enumeration values.
@@ -339,6 +343,7 @@ WDefaultEntry staticOptionList[] = {
 	    &wPreferences.focus_mode, getEnum, NULL, NULL, NULL},	/* manual to sloppy without restart */
 	{"NewStyle", "new", seTitlebarModes,
 	    &wPreferences.new_style, getEnum, NULL, NULL, NULL},
+#ifdef ORIGINAL_WMAKER
 	{"DisableDock", "NO", (void *)WM_DOCK,
 	    NULL, getBool, setIfDockPresent, NULL, NULL},
 	{"DisableClip", "NO", (void *)WM_CLIP,
@@ -347,6 +352,7 @@ WDefaultEntry staticOptionList[] = {
 	    NULL, getBool, setIfDockPresent, NULL, NULL},
 	{"ClipMergedInDock", "NO", NULL,
 	    NULL, getBool, setClipMergedInDock, NULL, NULL},
+#endif
 	{"DisableMiniwindows", "NO", NULL,
 	    &wPreferences.disable_miniwindows, getBool, NULL, NULL, NULL},
 	{"EnableWorkspacePager", "NO", NULL,
@@ -522,10 +528,12 @@ WDefaultEntry optionList[] = {
 	    &wPreferences.minipreview_size, getInt, NULL, NULL, NULL},
 	{"IgnoreGtkHints", "NO", NULL,
 	    &wPreferences.ignore_gtk_decoration_hints, getBool, NULL, NULL, NULL},
+#ifdef USE_RANDR
+#ifdef ORIGINAL_WMAKER
 	{"KeepDockOnPrimaryHead", "NO", NULL,
 	    &wPreferences.keep_dock_on_primary_head, getBool, updateDock,
 	    NULL, NULL},
-#ifdef USE_RANDR
+#endif
 	{"HotplugMonitor", "NO", NULL,
 	    &wPreferences.hotplug_monitor, getBool, NULL, NULL, NULL},
 #endif
@@ -1203,12 +1211,14 @@ void wDefaultsCheckDomains(void* arg)
 		}
 		w_global.domain.root_menu->timestamp = stbuf.st_mtime;
 
+#ifdef ORIGINAL_WMAKER
 		/* Rebuild the root menu (without mapping) so that shortcuts take effect immediately. */
 		for (i = 0; i < w_global.screen_count; i++) {
 			WScreen *s = wScreenWithNumber(i);
 			if (s)
 				wRootMenuReparse(s);
 		}
+#endif
 	}
 #ifndef HAVE_INOTIFY
 	if (!arg)
@@ -1331,6 +1341,7 @@ void wReadDefaults(WScreen * scr, WMPropList * new_dict)
 		if (needs_refresh & REFRESH_ICON_TILE)
 			WMPostNotificationName(WNIconTileSettingsChanged, NULL, NULL);
 
+#ifdef ORIGINAL_WMAKER
 		if (needs_refresh & REFRESH_WORKSPACE_MENU) {
 			if (scr->workspace_menu)
 				wWorkspaceMenuUpdate(scr, scr->workspace_menu);
@@ -1341,6 +1352,7 @@ void wReadDefaults(WScreen * scr, WMPropList * new_dict)
 			if (scr->clip_submenu)
 				scr->clip_submenu->flags.realized = 0;
 		}
+#endif
 	}
 }
 
@@ -1407,11 +1419,13 @@ void wDefaultUpdateIcons(WScreen *scr)
 		aicon = aicon->next;
 	}
 
+#ifdef ORIGINAL_WMAKER
 	if (!wPreferences.flags.noclip || wPreferences.flags.clip_merged_in_dock)
 		wClipIconPaint(scr->clip_icon);
 
 	for (dc = scr->drawers; dc != NULL; dc = dc->next)
 		wDrawerIconPaint(dc->adrawer->icon_array[0]);
+#endif
 
 	while (wwin) {
 		if (wwin->icon && wwin->flags.miniaturized)
@@ -1467,8 +1481,10 @@ void wKeyTreeRebuild(WScreen *scr)
 			act->u.wkbd_idx = i;
 	}
 
+#ifdef ORIGINAL_WMAKER
 	/* Insert root-menu shortcuts */
 	wRootMenuInsertIntoTree();
+#endif
 }
 
 /* --------------------------- Local ----------------------- */
@@ -2751,6 +2767,7 @@ static int setClearance(WScreen * scr, WDefaultEntry * entry, void *bar, void *f
 	return REFRESH_WINDOW_FONT | REFRESH_BUTTON_IMAGES | REFRESH_MENU_TITLE_FONT | REFRESH_MENU_FONT;
 }
 
+#ifdef ORIGINAL_WMAKER
 static int setIfDockPresent(WScreen * scr, WDefaultEntry * entry, void *tdata, void *extra_data)
 {
 	char *flag = tdata;
@@ -2791,6 +2808,7 @@ static int setClipMergedInDock(WScreen *scr, WDefaultEntry *entry, void *tdata, 
 	wPreferences.flags.noclip = wPreferences.flags.noclip || *flag;
 	return 0;
 }
+#endif
 
 static int setWrapAppiconsInDock(WScreen *scr, WDefaultEntry *entry, void *tdata, void *foo)
 {
@@ -2851,6 +2869,7 @@ static int setIconTile(WScreen * scr, WDefaultEntry * entry, void *tdata, void *
 	/* put the icon in the noticeboard hint */
 	PropSetIconTileHint(scr, img);
 
+#ifdef ORIGINAL_WMAKER
 	if (!wPreferences.flags.noclip || wPreferences.flags.clip_merged_in_dock) {
 		if (scr->clip_tile) {
 			RReleaseImage(scr->clip_tile);
@@ -2864,6 +2883,7 @@ static int setIconTile(WScreen * scr, WDefaultEntry * entry, void *tdata, void *
 		}
 		scr->drawer_tile = wDrawerMakeTile(scr, img);
 	}
+#endif
 
 	scr->icon_tile_pixmap = pixmap;
 
@@ -3677,7 +3697,9 @@ static int setModifierKeyLabels(WScreen * scr, WDefaultEntry * entry, void *tdat
 		return 0;
 	}
 
+#ifdef ORIGINAL_WMAKER
 	DestroyWindowMenu(scr);
+#endif
 
 	for (i = 0; i < 7; i++) {
 		if (prefs->modifier_labels[i])
@@ -3708,7 +3730,9 @@ static int setModifierShortKeyLabels(WScreen * scr, WDefaultEntry * entry, void 
 		return 0;
 	}
 
+#ifdef ORIGINAL_WMAKER
 	DestroyWindowMenu(scr);
+#endif
 
 	for (i = 0; i < 9; i++) {
 		if (prefs->modifier_short_labels[i])
@@ -3744,7 +3768,9 @@ static int setHotCornerActions(WScreen * scr, WDefaultEntry * entry, void *tdata
 		return 0;
 	}
 
+#ifdef ORIGINAL_WMAKER
 	DestroyWindowMenu(scr);
+#endif
 
 	for (i = 0; i < 4; i++) {
 		if (prefs->hot_corner_actions[i])
@@ -3806,6 +3832,7 @@ static int setCursor(WScreen * scr, WDefaultEntry * entry, void *tdata, void *ex
 	return 0;
 }
 
+#ifdef ORIGINAL_WMAKER
 static int updateDock(WScreen * scr, WDefaultEntry * entry,
 			      void *tdata, void *extra_data) {
 	(void) entry;
@@ -3817,3 +3844,4 @@ static int updateDock(WScreen * scr, WDefaultEntry * entry,
 
 	return 0;
 }
+#endif

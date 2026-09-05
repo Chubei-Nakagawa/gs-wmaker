@@ -118,7 +118,9 @@ typedef struct WMenu {
 
 
 void wMenuPaint(WMenu *menu);
+#ifdef ORIGINAL_WMAKER
 void wMenuDestroy(WMenu *menu, int recurse);
+#endif
 void wMenuRealize(WMenu *menu);
 WMenuEntry *wMenuInsertCascade(WMenu *menu, int index, const char *text,
 			       WMenu *cascade);
@@ -133,8 +135,10 @@ void wMenuEntrySetCascade(WMenu *menu, WMenuEntry *entry, WMenu *cascade);
 
 void wMenuRemoveItem(WMenu *menu, int index);
 
+#ifdef ORIGINAL_WMAKER
 WMenu *wMenuCreate(WScreen *screen, const char *title, int main_menu);
 WMenu *wMenuCreateForApp(WScreen *screen, const char *title, int main_menu);
+#endif
 void wMenuMap(WMenu *menu);
 void wMenuMapAt(WMenu *menu, int x, int y, int keyboard);
 #define wMenuMapCopyAt(menu, x, y) wMenuMapAt((menu)->brother, (x), (y), False)
@@ -142,10 +146,12 @@ void wMenuUnmap(WMenu *menu);
 void wMenuSetEnabled(WMenu *menu, int index, int enable);
 void wMenuMove(WMenu *menu, int x, int y, int submenus);
 void wMenuEntryRemoveCascade(WMenu *menu, WMenuEntry *entry);
+#ifdef ORIGINAL_WMAKER
 void wMenuScroll(WMenu *menu);
 WMenu *wMenuUnderPointer(WScreen *screen);
 void wMenuSaveState(WScreen *scr);
 void wMenuRestoreState(WScreen *scr);
+#endif
 
 
 #endif

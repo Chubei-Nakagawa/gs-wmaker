@@ -373,6 +373,7 @@ WArea wGetUsableAreaForHead(WScreen * scr, int head, WArea * totalAreaPtr, Bool 
 	} else
 		usableArea = totalArea;
 
+#ifdef ORIGINAL_WMAKER
 	if (noicons) {
 		/* check if user wants dock covered */
 		if (scr->dock && wPreferences.no_window_over_dock && wAppIconTouchesHead(scr->dock->icon_array[0], head)) {
@@ -395,6 +396,7 @@ WArea wGetUsableAreaForHead(WScreen * scr, int head, WArea * totalAreaPtr, Bool 
 				usableArea.x1 += offset;
 		}
 	}
+#endif
 
 	return usableArea;
 }

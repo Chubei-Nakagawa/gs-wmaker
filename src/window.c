@@ -1628,9 +1628,11 @@ void wUnmanageWindow(WWindow *wwin, Bool restore, Bool destroyed)
 	if (wwin->flags.inspector_open)
 		wCloseInspectorForWindow(wwin);
 
+#ifdef ORIGINAL_WMAKER
 	/* Close window menu if it's open for this window */
 	if (wwin->flags.menu_open_for_me)
 		CloseWindowMenu(scr);
+#endif
 
 	/* Don't restore focus to this window after a window exits
 	 * fullscreen mode */
@@ -1922,7 +1924,9 @@ void wWindowFocus(WWindow *wwin, WWindow *owin)
 
 void wWindowUnfocus(WWindow *wwin)
 {
+#ifdef ORIGINAL_WMAKER
 	CloseWindowMenu(wwin->screen_ptr);
+#endif
 
 	if (wwin->flags.is_gnustep == 0)
 		wFrameWindowChangeState(wwin->frame, wwin->flags.semi_focused ? WS_PFOCUSED : WS_UNFOCUSED);
@@ -2767,7 +2771,9 @@ void wWindowSetKeyGrabs(WWindow * wwin)
 			 wwin->frame->core->window, True, GrabModeAsync, GrabModeAsync);
 	}
 
+#ifdef ORIGINAL_WMAKER
 	wRootMenuBindShortcuts(wwin->frame->core->window);
+#endif
 }
 
 void wWindowResetMouseGrabs(WWindow * wwin)
@@ -2973,7 +2979,9 @@ void wWindowSetMark(WWindow *wwin, const char *label)
 
 	wwin->mark_key_label = wstrdup(label);
 
+#ifdef ORIGINAL_WMAKER
 	UpdateSwitchMenu(wwin->screen_ptr, wwin, ACTION_CHANGE);
+#endif
 }
 
 void wWindowUnsetMark(WWindow *wwin)
@@ -2984,7 +2992,9 @@ void wWindowUnsetMark(WWindow *wwin)
 	wfree(wwin->mark_key_label);
 	wwin->mark_key_label = NULL;
 
+#ifdef ORIGINAL_WMAKER
 	UpdateSwitchMenu(wwin->screen_ptr, wwin, ACTION_CHANGE);
+#endif
 }
 
 
@@ -3005,7 +3015,9 @@ static void resizebarMouseDown(WCoreWindow *sender, void *data, XEvent *event)
 
 	event->xbutton.state &= w_global.shortcut.modifiers_mask;
 
+#ifdef ORIGINAL_WMAKER
 	CloseWindowMenu(wwin->screen_ptr);
+#endif
 
 	if (wPreferences.focus_mode == WKF_CLICK && !(event->xbutton.state & ControlMask)
 	    && !WFLAGP(wwin, no_focusable)) {
@@ -3120,7 +3132,9 @@ static void frameMouseDown(WObjDescriptor *desc, XEvent *event)
 
 	event->xbutton.state &= w_global.shortcut.modifiers_mask;
 
+#ifdef ORIGINAL_WMAKER
 	CloseWindowMenu(wwin->screen_ptr);
+#endif
 
 	if ((wPreferences.mouse_wheel_focus || (event->xbutton.button != Button4 && event->xbutton.button != Button5)) && !(event->xbutton.state & ControlMask) && !WFLAGP(wwin, no_focusable))
 		wSetFocusTo(wwin->screen_ptr, wwin);
@@ -3179,7 +3193,9 @@ static void titlebarMouseDown(WCoreWindow *sender, void *data, XEvent *event)
 #endif
 	event->xbutton.state &= w_global.shortcut.modifiers_mask;
 
+#ifdef ORIGINAL_WMAKER
 	CloseWindowMenu(wwin->screen_ptr);
+#endif
 
 	if (wPreferences.focus_mode == WKF_CLICK && !(event->xbutton.state & ControlMask)
 	    && !WFLAGP(wwin, no_focusable))
@@ -3220,12 +3236,14 @@ static void titlebarMouseDown(WCoreWindow *sender, void *data, XEvent *event)
 			return;
 		}
 
+#ifdef ORIGINAL_WMAKER
 		OpenWindowMenu(wwin, event->xbutton.x_root, wwin->frame_y + wwin->frame->top_width, False);
 
 		/* allow drag select */
 		desc = &wwin->screen_ptr->window_menu->menu->descriptor;
 		event->xany.send_event = True;
 		(*desc->handle_mousedown) (desc, event);
+#endif
 
 		XUngrabPointer(dpy, CurrentTime);
 	}
@@ -3240,7 +3258,9 @@ static void windowCloseClick(WCoreWindow *sender, void *data, XEvent *event)
 
 	event->xbutton.state &= w_global.shortcut.modifiers_mask;
 
+#ifdef ORIGINAL_WMAKER
 	CloseWindowMenu(wwin->screen_ptr);
+#endif
 
 	if (event->xbutton.button < Button1 || event->xbutton.button > Button3)
 		return;
@@ -3264,7 +3284,9 @@ static void windowCloseDblClick(WCoreWindow *sender, void *data, XEvent *event)
 	/* Parameter not used, but tell the compiler that it is ok */
 	(void) sender;
 
+#ifdef ORIGINAL_WMAKER
 	CloseWindowMenu(wwin->screen_ptr);
+#endif
 
 	if (event->xbutton.button < Button1 || event->xbutton.button > Button3)
 		return;
@@ -3377,7 +3399,9 @@ static void windowIconifyClick(WCoreWindow *sender, void *data, XEvent *event)
 
 	event->xbutton.state &= w_global.shortcut.modifiers_mask;
 
+#ifdef ORIGINAL_WMAKER
 	CloseWindowMenu(wwin->screen_ptr);
+#endif
 
 	if (event->xbutton.button < Button1 || event->xbutton.button > Button3)
 		return;

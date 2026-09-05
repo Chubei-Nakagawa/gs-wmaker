@@ -80,8 +80,10 @@ static struct expert_option {
 	{ N_("Show app icons in window list."),
 	  /* default: */ False, OPTION_WMAKER, "WindowListAppIcons" },
 
+#ifdef ORIGINAL_WMAKER
 	{ N_("Show switch panel when cycling windows."),
 	  /* default: */ True, OPTION_WMAKER_ARRAY, "SwitchPanelImages" },
+#endif
 
 	{ N_("Show workspace title on Clip."),
 	  /* default: */ True, OPTION_WMAKER, "ShowClipTitle" },

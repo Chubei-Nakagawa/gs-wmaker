@@ -21,10 +21,12 @@
 #ifndef WMROOTMENU_H
 #define WMROOTMENU_H
 
+#ifdef ORIGINAL_WMAKER
 void wRootMenuInsertIntoTree(void);
 void wRootMenuReparse(WScreen *scr);
 void wRootMenuBindShortcuts(Window window);
 void OpenRootMenu(WScreen * scr, int x, int y, int keyboard);
 WMenu *configureMenu(WScreen *scr, WMPropList *definition);
+#endif
 
 #endif /* WMROOTMENU_H */

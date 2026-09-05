@@ -115,6 +115,7 @@ static void focusWindow(WMenu * menu, WMenuEntry * entry)
 	wWindowSingleFocus(wwin);
 }
 
+#ifdef ORIGINAL_WMAKER
 void InitializeSwitchMenu(void)
 {
 	if (!initialized) {
@@ -191,6 +192,7 @@ void OpenSwitchMenu(WScreen * scr, int x, int y, int keyboard)
 		wMenuMapAt(switchmenu, newx, newy, keyboard);
 	}
 }
+#endif
 
 static int menuIndexForWindow(WMenu * menu, WWindow * wwin, int old_pos)
 {
@@ -235,6 +237,7 @@ static void fillRtext(char *buf, size_t bufsz, WWindow *wwin, WScreen *scr)
 	wfree(mlbl);
 }
 
+#ifdef ORIGINAL_WMAKER
 /*
  * Update switch menu
  */
@@ -471,3 +474,4 @@ static void wsobserver(void *self, WMNotification * notif)
 
 	}
 }
+#endif

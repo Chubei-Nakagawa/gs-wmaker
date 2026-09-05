@@ -228,9 +228,11 @@ void wSetFocusTo(WScreen *scr, WWindow *wwin)
 		wUserMenuRefreshInstances(napp->menu, wwin);
 #endif	/* USER_MENU */
 
+#ifdef ORIGINAL_WMAKER
 		/* kix: Only menu map with mouse, not alt+tab! */
 		if (wwin->flags.mapped)
 			wAppMenuMap(napp->menu, wwin);
+#endif
 	}
 	if (napp && wPreferences.highlight_active_app)
 		wApplicationActivate(napp);
@@ -1818,10 +1820,13 @@ void wHideAll(WScreen *scr)
 	if (!scr)
 		return;
 
+#ifdef ORIGINAL_WMAKER
 	menu = scr->switch_menu;
+#endif
 
 	windows = wmalloc(sizeof(WWindow *));
 
+#ifdef ORIGINAL_WMAKER
 	if (menu != NULL) {
 		for (i = 0; i < menu->entry_no; i++) {
 			windows[wcount] = (WWindow *) menu->entries[i]->clientdata;
@@ -1829,6 +1834,7 @@ void wHideAll(WScreen *scr)
 			windows = wrealloc(windows, sizeof(WWindow *) * (wcount + 1));
 		}
 	} else {
+#endif
 		wwin = scr->focused_window;
 
 		while (wwin) {
@@ -1838,7 +1844,9 @@ void wHideAll(WScreen *scr)
 			wwin = wwin->prev;
 
 		}
+#ifdef ORIGINAL_WMAKER
 	}
+#endif
 
 	for (i = 0; i < wcount; i++) {
 		wwin = windows[i];
@@ -2169,6 +2177,7 @@ void wArrangeIcons(WScreen *scr, Bool arrangeAll)
 		WArea area = wGetUsableAreaForHead(scr, head, NULL, False);
 		WMRect rect;
 
+#ifdef ORIGINAL_WMAKER
 		if (scr->dock) {
 			int offset = wPreferences.icon_size + DOCK_EXTRA_SPACE;
 
@@ -2177,6 +2186,7 @@ void wArrangeIcons(WScreen *scr, Bool arrangeAll)
 			else
 				area.x1 += offset;
 		}
+#endif
 
 		rect = wmkrect(area.x1, area.y1, area.x2 - area.x1, area.y2 - area.y1);
 

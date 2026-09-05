@@ -89,7 +89,9 @@ int wWorkspaceNew(WScreen *scr)
 
 		wspace = wmalloc(sizeof(WWorkspace));
 		wspace->name = NULL;
+#ifdef ORIGINAL_WMAKER
 		wspace->clip = NULL;
+#endif
 
 		if (!wspace->name) {
 			static const char *new_name = NULL;
@@ -102,10 +104,12 @@ int wWorkspaceNew(WScreen *scr)
 			wspace->name = wmalloc(name_length);
 			snprintf(wspace->name, name_length, new_name, scr->workspace_count);
 		}
+#ifdef ORIGINAL_WMAKER
 
 		if (!wPreferences.flags.noclip)
 			wspace->clip = wDockCreate(scr, WM_CLIP, NULL);
 
+#endif
 		list = wmalloc(sizeof(WWorkspace *) * scr->workspace_count);
 
 		for (i = 0; i < scr->workspace_count - 1; i++)
@@ -117,8 +121,10 @@ int wWorkspaceNew(WScreen *scr)
 
 		scr->workspaces = list;
 
+#ifdef ORIGINAL_WMAKER
 		wWorkspaceMenuUpdate(scr, scr->workspace_menu);
 		wWorkspaceMenuUpdate(scr, scr->clip_ws_menu);
+#endif
 		wNETWMUpdateDesktop(scr);
 		WMPostNotificationName(WMNWorkspaceCreated, scr, (void *)(uintptr_t) (scr->workspace_count - 1));
 		XFlush(dpy);
@@ -151,10 +157,12 @@ Bool wWorkspaceDelete(WScreen * scr, int workspace)
 		tmp = tmp->prev;
 	}
 
+#ifdef ORIGINAL_WMAKER
 	if (!wPreferences.flags.noclip) {
 		wDockDestroy(scr->workspaces[workspace]->clip);
 		scr->workspaces[workspace]->clip = NULL;
 	}
+#endif
 
 	list = wmalloc(sizeof(WWorkspace *) * (scr->workspace_count - 1));
 	j = 0;
@@ -174,6 +182,7 @@ Bool wWorkspaceDelete(WScreen * scr, int workspace)
 
 	scr->workspace_count--;
 
+#ifdef ORIGINAL_WMAKER
 	/* update menu */
 	wWorkspaceMenuUpdate(scr, scr->workspace_menu);
 	/* clip workspace menu */
@@ -197,6 +206,7 @@ Bool wWorkspaceDelete(WScreen * scr, int workspace)
 			wMenuRemoveItem(menu, --i);
 		wMenuRealize(menu);
 	}
+#endif
 	wNETWMUpdateDesktop(scr);
 	WMPostNotificationName(WMNWorkspaceDestroyed, scr, (void *)(uintptr_t) (scr->workspace_count - 1));
 
@@ -487,14 +497,18 @@ void wWorkspaceForceChange(WScreen * scr, int workspace)
 	if (workspace > scr->workspace_count - 1)
 		wWorkspaceMake(scr, workspace - scr->workspace_count + 1);
 
+#ifdef ORIGINAL_WMAKER
 	wClipUpdateForWorkspaceChange(scr, workspace);
+#endif
 
 	scr->last_workspace = scr->current_workspace;
 	scr->current_workspace = workspace;
 
+#ifdef ORIGINAL_WMAKER
 	wWorkspaceMenuUpdate(scr, scr->workspace_menu);
 
 	wWorkspaceMenuUpdate(scr, scr->clip_ws_menu);
+#endif
 
 	tmp = scr->focused_window;
 	if (tmp != NULL) {
@@ -648,6 +662,7 @@ void wWorkspaceForceChange(WScreen * scr, int workspace)
 	if (!wPreferences.sticky_icons)
 		wArrangeIcons(scr, False);
 
+#ifdef ORIGINAL_WMAKER
 	if (scr->dock)
 		wAppIconPaint(scr->dock->icon_array[0]);
 
@@ -660,6 +675,7 @@ void wWorkspaceForceChange(WScreen * scr, int workspace)
 	else if (scr->clip_icon != NULL) {
 		wClipIconPaint(scr->clip_icon);
 	}
+#endif
 	wScreenUpdateUsableArea(scr);
 	wNETWMUpdateDesktop(scr);
 	showWorkspaceName(scr, workspace);
@@ -727,6 +743,7 @@ void wWorkspaceRename(WScreen *scr, int workspace, const char *name)
 	wfree(scr->workspaces[workspace]->name);
 	scr->workspaces[workspace]->name = wstrdup(buf);
 
+#ifdef ORIGINAL_WMAKER
 	if (scr->clip_ws_menu) {
 		if (strcmp(scr->clip_ws_menu->entries[workspace + MC_WORKSPACE1]->text, buf) != 0) {
 			wfree(scr->clip_ws_menu->entries[workspace + MC_WORKSPACE1]->text);
@@ -744,6 +761,7 @@ void wWorkspaceRename(WScreen *scr, int workspace, const char *name)
 
 	if (scr->clip_icon)
 		wClipIconPaint(scr->clip_icon);
+#endif
 
 	WMPostNotificationName(WMNWorkspaceNameChanged, scr, (void *)(uintptr_t) workspace);
 }
@@ -757,6 +775,7 @@ static void onMenuEntryEdited(WMenu * menu, WMenuEntry * entry)
 	wWorkspaceRename(menu->frame->screen_ptr, (long)entry->clientdata, tmp);
 }
 
+#ifdef ORIGINAL_WMAKER
 WMenu *wWorkspaceMenuMake(WScreen * scr, Bool titled)
 {
 	WMenu *wsmenu;
@@ -842,6 +861,7 @@ void wWorkspaceMenuUpdate(WScreen * scr, WMenu * menu)
 
 	wMenuPaint(menu);
 }
+#endif
 
 void wWorkspaceSaveState(WScreen * scr, WMPropList * old_state)
 {
@@ -856,11 +876,15 @@ void wWorkspaceSaveState(WScreen * scr, WMPropList * old_state)
 		pstr = WMCreatePLString(scr->workspaces[i]->name);
 		wks_state = WMCreatePLDictionary(dName, pstr, NULL);
 		WMReleasePropList(pstr);
+#ifdef ORIGINAL_WMAKER
 		if (!wPreferences.flags.noclip) {
 			pstr = wClipSaveWorkspaceState(scr, i);
 			WMPutInPLDictionary(wks_state, dClip, pstr);
 			WMReleasePropList(pstr);
 		} else if (old_wks_state != NULL) {
+#else
+		if (old_wks_state != NULL) {
+#endif
 			foo = WMGetFromPLArray(old_wks_state, i);
 			if (foo != NULL) {
 				bar = WMGetFromPLDictionary(foo, dClip);
@@ -900,14 +924,17 @@ void wWorkspaceRestoreState(WScreen *scr)
 		if (i >= scr->workspace_count)
 			wWorkspaceNew(scr);
 
+#ifdef ORIGINAL_WMAKER
 		if (scr->workspace_menu) {
 			wfree(scr->workspace_menu->entries[i + MC_WORKSPACE1]->text);
 			scr->workspace_menu->entries[i + MC_WORKSPACE1]->text = wstrdup(WMGetFromPLString(pstr));
 			scr->workspace_menu->flags.realized = 0;
 		}
+#endif
 
 		wfree(scr->workspaces[i]->name);
 		scr->workspaces[i]->name = wstrdup(WMGetFromPLString(pstr));
+#ifdef ORIGINAL_WMAKER
 		if (!wPreferences.flags.noclip) {
 			int added_omnipresent_icons = 0;
 
@@ -953,6 +980,7 @@ void wWorkspaceRestoreState(WScreen *scr)
 			}
 			scr->workspaces[0]->clip->icon_count += added_omnipresent_icons;
 		}
+#endif
 
 		WMPostNotificationName(WMNWorkspaceNameChanged, scr, (void *)(uintptr_t) i);
 	}

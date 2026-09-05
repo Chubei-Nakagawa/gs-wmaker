@@ -510,6 +510,7 @@ static void appiconBalloon(WObjDescriptor *object)
 	char *tmp;
 
 	/* Show balloon if it is the Clip and the workspace name is > 5 chars */
+#ifdef ORIGINAL_WMAKER
 	if (object->parent == scr->clip_icon) {
 		if (strlen(scr->workspaces[scr->current_workspace]->name) > 5) {
 			scr->balloon->text = wstrdup(scr->workspaces[scr->current_workspace]->name);
@@ -518,6 +519,9 @@ static void appiconBalloon(WObjDescriptor *object)
 			return;
 		}
 	} else if (aicon->command && aicon->wm_class) {
+#else
+	if (aicon->command && aicon->wm_class) {
+#endif
 		int len;
 		WApplication *app;
 		unsigned int app_win_cnt = 0;

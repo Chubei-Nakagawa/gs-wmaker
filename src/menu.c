@@ -20,6 +20,7 @@
  */
 
 #include "wconfig.h"
+#ifdef ORIGINAL_WMAKER
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -175,8 +176,10 @@ WMenu *wMenuCreate(WScreen *screen, const char *title, int main_menu)
 	menu->selected_entry = -1;
 	menu->entries = NULL;
 
+#ifdef ORIGINAL_WMAKER
 	menu->frame_x = screen->app_menu_x;
 	menu->frame_y = screen->app_menu_y;
+#endif
 
 	menu->frame->child = menu;
 
@@ -751,6 +754,7 @@ static void paintEntry(WMenu * menu, int index, int selected)
 		XDrawLine(dpy, win, dark, w - 12, y + 6, w - 12, y + h - 8);
 	}
 
+#ifdef ORIGINAL_WMAKER
 	/* draw indicator */
 	if (entry->flags.indicator && entry->flags.indicator_on) {
 		int iw, ih;
@@ -839,6 +843,7 @@ static void paintEntry(WMenu * menu, int index, int selected)
 			XSetClipOrigin(dpy, scr->copy_gc, 0, 0);
 		}
 	}
+#endif
 
 	/* draw right text */
 
@@ -850,6 +855,7 @@ static void paintEntry(WMenu * menu, int index, int selected)
 	}
 }
 
+#ifdef ORIGINAL_WMAKER
 static void move_menus(WMenu * menu, int x, int y)
 {
 	while (menu->parent) {
@@ -894,6 +900,7 @@ static void makeVisible(WMenu * menu)
 	new_y = new_y - menu->frame->top_width - menu->selected_entry * menu->entry_height;
 	move_menus(menu, new_x, new_y);
 }
+#endif
 
 static int check_key(WMenu * menu, XKeyEvent * event)
 {
@@ -2598,3 +2605,4 @@ void wMenuRestoreState(WScreen * scr)
 	}
 	restoreMenuRecurs(scr, menus, scr->root_menu, "");
 }
+#endif

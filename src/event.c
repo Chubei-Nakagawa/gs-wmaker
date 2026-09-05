@@ -660,12 +660,14 @@ static void handleMapRequest(XEvent * ev)
 	 * It is not necessary for normally docked apps, but is needed for
 	 * apps that were forcedly docked (like with dockit).
 	 */
+#ifdef ORIGINAL_WMAKER
 	if (scr->last_dock) {
 		if (wwin && wwin->main_window != None && wwin->main_window != window)
 			wDockTrackWindowLaunch(scr->last_dock, wwin->main_window);
 		else
 			wDockTrackWindowLaunch(scr->last_dock, window);
 	}
+#endif
 
 	if (wwin) {
 		wClientSetState(wwin, NormalState, None);
@@ -797,6 +799,7 @@ static void executeButtonAction(WScreen *scr, XEvent *event, int action)
 	case WA_SELECT_WINDOWS:
 		wUnselectWindows(scr);
 		wSelectWindows(scr, event);
+#ifdef ORIGINAL_WMAKER
 		if (wPreferences.close_rootmenu_left_right_click){
 			WMenu *menu = NULL;
 			WMPropList *definition;
@@ -809,7 +812,9 @@ static void executeButtonAction(WScreen *scr, XEvent *event, int action)
 				scr->root_menu = menu;
 			}
 		}
+#endif
 		break;
+#ifdef ORIGINAL_WMAKER
 	case WA_OPEN_APPMENU:
 		OpenRootMenu(scr, event->xbutton.x_root, event->xbutton.y_root, False);
 		/* ugly hack */
@@ -829,6 +834,7 @@ static void executeButtonAction(WScreen *scr, XEvent *event, int action)
 				event->xbutton.window = scr->switch_menu->frame->core->window;
 		}
 		break;
+#endif
 	case WA_MOVE_PREVWORKSPACE:
 		wWorkspaceRelativeChange(scr, -1);
 		break;
@@ -1543,6 +1549,7 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 
 	switch (command) {
 
+#ifdef ORIGINAL_WMAKER
 	case WKBD_ROOTMENU:
 		/*OpenRootMenu(scr, event->xkey.x_root, event->xkey.y_root, True); */
 		if (!CheckFullScreenWindowFocused(scr)) {
@@ -1563,14 +1570,19 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin))
 			OpenWindowMenu(wwin, wwin->frame_x, wwin->frame_y + wwin->frame->top_width, True);
 		break;
+#endif
 	case WKBD_MINIMIZEALL:
+#ifdef ORIGINAL_WMAKER
 		CloseWindowMenu(scr);
+#endif
 		wHideAll(scr);
 		break;
 	case WKBD_MINIATURIZE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin)
 		    && !WFLAGP(wwin, no_miniaturizable)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			if (wwin->protocols.MINIATURIZE_WINDOW)
 				wClientSendProtocol(wwin, w_global.atom.gnustep.wm_miniaturize_window, event->xbutton.time);
@@ -1582,7 +1594,9 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 	case WKBD_HIDE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin)) {
 			WApplication *wapp = wApplicationOf(wwin->main_window);
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			if (wapp && !WFLAGP(wapp->main_window_desc, no_appicon)) {
 				wHideApplication(wapp);
@@ -1591,28 +1605,36 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		break;
 	case WKBD_HIDE_OTHERS:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			wHideOtherApplications(wwin);
 		}
 		break;
 	case WKBD_MAXIMIZE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && IS_RESIZABLE(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			handleMaximize(wwin, MAX_VERTICAL | MAX_HORIZONTAL | MAX_KEYBOARD);
 		}
 		break;
 	case WKBD_VMAXIMIZE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && IS_RESIZABLE(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			handleMaximize(wwin, MAX_VERTICAL | MAX_KEYBOARD);
 		}
 		break;
 	case WKBD_HMAXIMIZE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && IS_RESIZABLE(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			handleMaximize(wwin, MAX_HORIZONTAL | MAX_KEYBOARD);
 			movePointerToWindowCenter(wwin);
@@ -1620,7 +1642,9 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		break;
 	case WKBD_CENTRAL:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && IS_RESIZABLE(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			handleMaximize(wwin, MAX_CENTRAL | MAX_KEYBOARD);
 			movePointerToWindowCenter(wwin);
@@ -1628,7 +1652,9 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		break;
 	case WKBD_LHMAXIMIZE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && IS_RESIZABLE(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			handleMaximize(wwin, MAX_VERTICAL | MAX_LEFTHALF | MAX_KEYBOARD);
 			movePointerToWindowCenter(wwin);
@@ -1636,7 +1662,9 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		break;
 	case WKBD_RHMAXIMIZE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && IS_RESIZABLE(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			handleMaximize(wwin, MAX_VERTICAL | MAX_RIGHTHALF | MAX_KEYBOARD);
 			movePointerToWindowCenter(wwin);
@@ -1644,7 +1672,9 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		break;
 	case WKBD_THMAXIMIZE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && IS_RESIZABLE(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			handleMaximize(wwin, MAX_HORIZONTAL | MAX_TOPHALF | MAX_KEYBOARD);
 			movePointerToWindowCenter(wwin);
@@ -1652,7 +1682,9 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		break;
 	case WKBD_BHMAXIMIZE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && IS_RESIZABLE(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			handleMaximize(wwin, MAX_HORIZONTAL | MAX_BOTTOMHALF | MAX_KEYBOARD);
 			movePointerToWindowCenter(wwin);
@@ -1660,7 +1692,9 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		break;
 	case WKBD_LTCMAXIMIZE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && IS_RESIZABLE(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			handleMaximize(wwin, MAX_LEFTHALF | MAX_TOPHALF | MAX_KEYBOARD);
 			movePointerToWindowCenter(wwin);
@@ -1668,7 +1702,9 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		break;
 	case WKBD_RTCMAXIMIZE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && IS_RESIZABLE(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			handleMaximize(wwin, MAX_RIGHTHALF | MAX_TOPHALF | MAX_KEYBOARD);
 			movePointerToWindowCenter(wwin);
@@ -1676,7 +1712,9 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		break;
 	case WKBD_LBCMAXIMIZE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && IS_RESIZABLE(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			handleMaximize(wwin, MAX_LEFTHALF | MAX_BOTTOMHALF | MAX_KEYBOARD);
 			movePointerToWindowCenter(wwin);
@@ -1684,7 +1722,9 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		 break;
 	case WKBD_RBCMAXIMIZE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && IS_RESIZABLE(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			handleMaximize(wwin, MAX_RIGHTHALF | MAX_BOTTOMHALF | MAX_KEYBOARD);
 			movePointerToWindowCenter(wwin);
@@ -1692,14 +1732,18 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		break;
 	case WKBD_MAXIMUS:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && IS_RESIZABLE(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			handleMaximize(wwin, MAX_MAXIMUS | MAX_KEYBOARD);
 		}
 		break;
 	case WKBD_KEEP_ON_TOP:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			if (wwin->frame->core->stacking->window_level != WMFloatingLevel)
 				ChangeStackingLevel(wwin->frame->core, WMFloatingLevel);
@@ -1710,7 +1754,9 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 
 	case WKBD_KEEP_AT_BOTTOM:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			if (wwin->frame->core->stacking->window_level != WMSunkenLevel)
 				ChangeStackingLevel(wwin->frame->core, WMSunkenLevel);
@@ -1720,21 +1766,27 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		break;
 	case WKBD_OMNIPRESENT:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			wWindowSetOmnipresent(wwin, !wwin->flags.omnipresent);
 		}
 		break;
 	case WKBD_RAISE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			wRaiseFrame(wwin->frame->core);
 		}
 		break;
 	case WKBD_LOWER:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			wLowerFrame(wwin->frame->core);
 		}
@@ -1757,14 +1809,18 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		break;
 	case WKBD_MOVERESIZE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && (IS_RESIZABLE(wwin) || IS_MOVABLE(wwin))) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 
 			wKeyboardMoveResizeWindow(wwin);
 		}
 		break;
 	case WKBD_CLOSE:
 		if (ISMAPPED(wwin) && ISFOCUSED(wwin) && !WFLAGP(wwin, no_closable)) {
+#ifdef ORIGINAL_WMAKER
 			CloseWindowMenu(scr);
+#endif
 			if (wwin->protocols.DELETE_WINDOW)
 				wClientSendProtocol(wwin, w_global.atom.wm.delete_window, event->xkey.time);
 		}
@@ -2006,6 +2062,7 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 			}
 		}
 		break;
+#ifdef ORIGINAL_WMAKER
 	case WKBD_CLIPRAISELOWER:
 		if (!wPreferences.flags.noclip)
 			wDockRaiseLower(scr->workspaces[scr->current_workspace]->clip);
@@ -2014,6 +2071,7 @@ static void dispatchWKBDCommand(int command, WScreen *scr, WWindow *wwin, XEvent
 		if (!wPreferences.flags.nodock)
 			wDockRaiseLower(scr->dock);
 		break;
+#endif
 #ifdef KEEP_XKB_LOCK_STATUS
 	case WKBD_TOGGLE:
 		if (wPreferences.modelock) {
@@ -2287,10 +2345,12 @@ static void handleKeyPress(XEvent * event)
 	/* Execute all leaf actions for this key sequence */
 	for (act = match->actions; act != NULL; act = act->next) {
 		if (act->type == WKN_MENU) {
+#ifdef ORIGINAL_WMAKER
 			WMenu *menu  = (WMenu *) act->u.menu.menu;
 			WMenuEntry *entry = (WMenuEntry *) act->u.menu.entry;
 
 			(*entry->callback)(menu, entry);
+#endif
 		} else {
 			dispatchWKBDCommand(act->u.wkbd_idx, scr, wwin, event);
 		}
@@ -2390,6 +2450,7 @@ static void handleMotionNotify(XEvent *event)
 			}
 		}
 
+#ifdef ORIGINAL_WMAKER
 		if (wPreferences.scrollable_menus) {
 			if (scr->flags.jump_back_pending ||
 			    p.x <= (rect.pos.x + 1) ||
@@ -2402,6 +2463,7 @@ static void handleMotionNotify(XEvent *event)
 					wMenuScroll(menu);
 			}
 		}
+#endif
 	}
 }
 

@@ -492,10 +492,14 @@ extern struct WPreferences {
 #ifdef USE_ICCCM_WMREPLACE
 		unsigned int replace:1;               /* replace existing window manager */
 #endif
+#ifdef ORIGINAL_WMAKER
 		unsigned int nodock:1;                /* don't display the dock */
 		unsigned int noclip:1;                /* don't display the clip */
+#endif
 		unsigned int clip_merged_in_dock:1;   /* disable clip, switch workspaces with dock */
+#ifdef ORIGINAL_WMAKER
 		unsigned int nodrawer:1;              /* don't use drawers */
+#endif
 		unsigned int wrap_appicons_in_dock:1; /* Whether to wrap appicons when Dock is moved up and down */
 		unsigned int noupdates:1;             /* don't require ~/GNUstep (-static) */
 		unsigned int noautolaunch:1;          /* don't autolaunch apps */

@@ -167,8 +167,10 @@ Bool wXDNDProcessSelection(XEvent *event)
 			wfree(tmp);
 		}
 		WMFreeArray(items);
+#ifdef ORIGINAL_WMAKER
 		if (scr->xdestring[0])
 			wDockReceiveDNDDrop(scr, event);
+#endif
 		wfree(scr->xdestring);	/* this xdestring is not from Xlib (no XFree) */
 	}
 
@@ -199,6 +201,7 @@ static Bool isAwareXDND(Window window)
 static Bool acceptXDND(Window window)
 {
 	WScreen *scr = wScreenForWindow(window);
+#ifdef ORIGINAL_WMAKER
 	WDock *dock;
 	int icon_pos, i;
 
@@ -233,6 +236,7 @@ static Bool acceptXDND(Window window)
 
 	if (dock->icon_array[icon_pos]->dnd_command != NULL)
 		return True;
+#endif
 
 	return False;
 }

@@ -21,8 +21,10 @@
 #ifndef WMSWITCHMENU_H
 #define WMSWITCHMENU_H
 
+#ifdef ORIGINAL_WMAKER
 void UpdateSwitchMenu(WScreen *scr, WWindow *wwin, int action);
 void OpenSwitchMenu(WScreen *scr, int x, int y, int keyboard);
 void InitializeSwitchMenu(void);
+#endif
 
 #endif /* WMSWITCHMENU_H */

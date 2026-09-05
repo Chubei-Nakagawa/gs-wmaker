@@ -480,6 +480,7 @@ static void createPixmaps(WScreen * scr)
 {
 	WPixmap *pix;
 
+#ifdef ORIGINAL_WMAKER
 	/* load pixmaps */
 #define LOADPIXMAPINDICATOR(XBM,W,I) {\
 	pix = wPixmapCreateFromXBMData(scr, (char *)XBM, (char *)XBM,\
@@ -509,10 +510,13 @@ static void createPixmaps(WScreen * scr)
 	LOADPIXMAPINDICATOR(MENU_SNAP_TILED_INDICATOR_XBM_DATA, MENU_SNAP_INDICATOR_W_XBM_SIZE, menu_snap_tiled_indicator)
 
 #undef LOADPIXMAPINDICATOR
+#endif
 
 	create_logo_image(scr);
 
+#ifdef ORIGINAL_WMAKER
 	scr->dock_dots = make3Dots(scr);
+#endif
 
 	/* titlebar button pixmaps */
 	allocButtonPixmaps(scr);
@@ -571,9 +575,11 @@ static void createInternalWindows(WScreen * scr)
 	attribs.cursor = wPreferences.cursor[WCUR_NORMAL];
 	vmask |= CWColormap;
 	attribs.colormap = scr->w_colormap;
+#ifdef ORIGINAL_WMAKER
 	scr->dock_shadow =
 	    XCreateWindow(dpy, scr->root_win, 0, 0, wPreferences.icon_size,
 			  wPreferences.icon_size, 0, scr->w_depth, CopyFromParent, scr->w_visual, vmask, &attribs);
+#endif
 
 	/* workspace name */
 	vmask = CWBackPixel | CWSaveUnder | CWOverrideRedirect | CWColormap | CWBorderPixel;
@@ -898,8 +904,10 @@ void wScreenRestoreState(WScreen * scr)
 	WMPropList *state;
 	char *path;
 
+#ifdef ORIGINAL_WMAKER
 	OpenRootMenu(scr, -10000, -10000, False);
 	wMenuUnmap(scr->root_menu);
+#endif
 
 	make_keys();
 
@@ -921,6 +929,7 @@ void wScreenRestoreState(WScreen * scr)
 	if (!scr->session_state)
 		scr->session_state = WMCreatePLDictionary(NULL, NULL);
 
+#ifdef ORIGINAL_WMAKER
 	if (!wPreferences.flags.nodock) {
 		state = WMGetFromPLDictionary(scr->session_state, dDock);
 		scr->dock = wDockRestoreState(scr, state, WM_DOCK);
@@ -942,6 +951,7 @@ void wScreenRestoreState(WScreen * scr)
 		}
 		wDrawersRestoreState(scr);
 	}
+#endif
 
 	wWorkspaceRestoreState(scr);
 	wScreenUpdateUsableArea(scr);
@@ -971,6 +981,7 @@ void wScreenSaveState(WScreen * scr)
 	WMPLSetCaseSensitive(True);
 
 	/* save dock state to file */
+#ifdef ORIGINAL_WMAKER
 	if (!wPreferences.flags.nodock) {
 		wDockSaveState(scr, old_state);
 	} else {
@@ -995,6 +1006,19 @@ void wScreenSaveState(WScreen * scr)
 		if (foo != NULL)
 			WMPutInPLDictionary(scr->session_state, dDrawers, foo);
 	}
+#else
+	foo = WMGetFromPLDictionary(old_state, dDock);
+	if (foo != NULL)
+		WMPutInPLDictionary(scr->session_state, dDock, foo);
+
+	foo = WMGetFromPLDictionary(old_state, dClip);
+	if (foo != NULL)
+		WMPutInPLDictionary(scr->session_state, dClip, foo);
+
+	foo = WMGetFromPLDictionary(old_state, dDrawers);
+	if (foo != NULL)
+		WMPutInPLDictionary(scr->session_state, dDrawers, foo);
+#endif
 
 
 	if (wPreferences.save_session_on_exit) {
@@ -1012,7 +1036,9 @@ void wScreenSaveState(WScreen * scr)
 	/* clean up */
 	WMPLSetCaseSensitive(False);
 
+#ifdef ORIGINAL_WMAKER
 	wMenuSaveState(scr);
+#endif
 
 	if (w_global.screen_count == 1) {
 		str = wdefaultspathfordomain("WMState");

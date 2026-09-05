@@ -243,18 +243,23 @@ static WMPropList *makeWindowState(WWindow * wwin, WApplication * wapp)
 		if (wapp && wapp->app_icon && wapp->app_icon->dock) {
 			int i;
 			char *name = NULL;
+#ifdef ORIGINAL_WMAKER			
 			if (wapp->app_icon->dock == scr->dock)
 				name = "Dock";
+#endif
 
 			/* Try the clips */
 			if (name == NULL) {
+#ifdef ORIGINAL_WMAKER
 				for (i = 0; i < scr->workspace_count; i++)
 					if (scr->workspaces[i]->clip == wapp->app_icon->dock)
 						break;
+#endif
 				if (i < scr->workspace_count)
 					name = scr->workspaces[i]->name;
 			}
 			/* Try the drawers */
+#ifdef ORIGINAL_WMAKER
 			if (name == NULL) {
 				WDrawerChain *dc;
 				for (dc = scr->drawers; dc != NULL; dc = dc->next) {
@@ -265,6 +270,7 @@ static WMPropList *makeWindowState(WWindow * wwin, WApplication * wapp)
 				name = dc->adrawer->icon_array[0]->wm_instance;
 			}
 			dock = WMCreatePLString(name);
+#endif
 			WMPutInPLDictionary(win_state, sDock, dock);
 			WMReleasePropList(dock);
 		}
@@ -454,7 +460,9 @@ void wSessionRestoreState(WScreen *scr)
 	WMPropList *win_info, *apps, *cmd, *value;
 	pid_t pid;
 	int i, count;
+#ifdef ORIGINAL_WMAKER
 	WDock *dock;
+#endif
 	WAppIcon *btn = NULL;
 	int j, n, found;
 	char *tmp;
@@ -492,6 +500,7 @@ void wSessionRestoreState(WScreen *scr)
 
 		state = getWindowState(scr, win_info);
 
+#ifdef ORIGINAL_WMAKER
 		dock = NULL;
 		value = WMGetFromPLDictionary(win_info, sDock);
 		if (value && WMIsPLString(value) && (tmp = WMGetFromPLString(value)) != NULL) {
@@ -528,8 +537,10 @@ void wSessionRestoreState(WScreen *scr)
 				}
 			}
 		}
+#endif
 
 		found = 0;
+#ifdef ORIGINAL_WMAKER
 		if (dock != NULL) {
 			for (j = 0; j < dock->max_icons; j++) {
 				btn = dock->icon_array[j];
@@ -542,9 +553,12 @@ void wSessionRestoreState(WScreen *scr)
 				}
 			}
 		}
+#endif
 
 		if (found) {
+#ifdef ORIGINAL_WMAKER
 			wDockLaunchWithState(btn, state);
+#endif
 		} else if ((pid = execCommand(scr, command)) > 0) {
 			wWindowAddSavedState(instance, class, command, pid, state);
 		} else {

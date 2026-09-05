@@ -216,6 +216,7 @@ typedef struct _WScreen {
     GC mono_gc;			       /* gc for 1 bit drawables */
 
     struct WPixmap *b_pixmaps[PRED_BPIXMAPS]; /* internal pixmaps for buttons*/
+#ifdef ORIGINAL_WMAKER
     struct WPixmap *menu_radio_indicator;/* left menu indicator */
     struct WPixmap *menu_check_indicator;/* left menu indicator for checkmark */
     struct WPixmap *menu_mini_indicator;   /* for miniwindow */
@@ -254,6 +255,7 @@ typedef struct _WScreen {
     struct WMenu *clip_ws_menu;	       /* workspace menu for clip */
     struct WMenu *drawer_menu;         /* Menu for drawers */
     struct WDock *last_dock;
+#endif
     WAppIconChain *global_icons;       /* for omnipresent icons chain in clip */
     int global_icon_count;	       /* How many global icons do we have */
     WDrawerChain *drawers;             /* Chain of drawers */

@@ -95,9 +95,11 @@ WApplication *wApplicationCreate(WWindow * wwin)
 	wapp = wApplicationOf(main_window);
 	if (wapp) {
 		wapp->refcount++;
+#ifdef ORIGINAL_WMAKER
 		if (wapp->app_icon && wapp->app_icon->docked &&
 		    wapp->app_icon->relaunching && wapp->main_window_desc->fake_group)
 			wDockFinishLaunch(wapp->app_icon);
+#endif
 
 		return wapp;
 	}
@@ -181,7 +183,9 @@ void wApplicationDestroy(WApplication *wapp)
 	}
 
 	XDeleteContext(dpy, wapp->main_window, w_global.context.app_win);
+#ifdef ORIGINAL_WMAKER
 	wAppMenuDestroy(wapp->menu);
+#endif
 
 	/* Remove application icon */
 	removeAppIconFor(wapp);

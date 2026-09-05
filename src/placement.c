@@ -117,6 +117,7 @@ void PlaceIcon(WScreen *scr, int *x_ret, int *y_ret, int head)
 	WArea area = wGetUsableAreaForHead(scr, head, NULL, False);
 
 	/* Do not place icons under the dock. */
+#ifdef ORIGINAL_WMAKER
 	if (scr->dock) {
 		int offset = wPreferences.icon_size + DOCK_EXTRA_SPACE;
 
@@ -125,6 +126,7 @@ void PlaceIcon(WScreen *scr, int *x_ret, int *y_ret, int head)
 		else
 		    area.x1 += offset;
 	}
+#endif
 
 	/* Find out screen boundaries. */
 

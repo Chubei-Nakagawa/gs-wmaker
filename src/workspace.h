@@ -25,7 +25,9 @@
 
 typedef struct WWorkspace {
     char *name;
+#ifdef ORIGINAL_WMAKER
     struct WDock *clip;
+#endif
     RImage *map;
 } WWorkspace;
 
@@ -35,9 +37,11 @@ int wGetWorkspaceNumber(WScreen *scr, const char *value);
 Bool wWorkspaceDelete(WScreen *scr, int workspace);
 void wWorkspaceChange(WScreen *scr, int workspace);
 void wWorkspaceForceChange(WScreen *scr, int workspace);
+#ifdef ORIGINAL_WMAKER
 WMenu *wWorkspaceMenuMake(WScreen *scr, Bool titled);
 void wWorkspaceMenuUpdate(WScreen *scr, WMenu *menu);
 void wWorkspaceMenuEdit(WScreen *scr);
+#endif
 void wWorkspaceSaveState(WScreen *scr, WMPropList *old_state);
 void wWorkspaceRestoreState(WScreen *scr);
 void wWorkspaceRename(WScreen *scr, int workspace, const char *name);

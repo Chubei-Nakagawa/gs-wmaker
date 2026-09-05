@@ -670,7 +670,9 @@ void StartUp(Bool defaultScreenOnly)
 		w_global.screen_count++;
 	}
 
+#ifdef ORIGINAL_WMAKER
 	InitializeSwitchMenu();
+#endif
 
 	/* initialize/restore state for the screens */
 	for (j = 0; j < w_global.screen_count; j++) {
@@ -680,19 +682,24 @@ void StartUp(Bool defaultScreenOnly)
 
 		wScreenRestoreState(wScreen[j]);
 
+#ifdef ORIGINAL_WMAKER
 		/* manage all windows that were already here before us */
 		if (!wPreferences.flags.nodock && wScreen[j]->dock)
 			wScreen[j]->last_dock = wScreen[j]->dock;
+#endif
 
 		manageAllWindows(wScreen[j], wPreferences.flags.restarting == 2);
 
+#ifdef ORIGINAL_WMAKER
 		/* restore saved menus */
 		wMenuRestoreState(wScreen[j]);
+#endif
 
 		/* If we're not restarting, restore session */
 		if (wPreferences.flags.restarting == 0 && !wPreferences.flags.norestore)
 			wSessionRestoreState(wScreen[j]);
 
+#ifdef ORIGINAL_WMAKER
 		if (!wPreferences.flags.noautolaunch) {
 			/* auto-launch apps */
 			if (!wPreferences.flags.nodock && wScreen[j]->dock) {
@@ -718,6 +725,7 @@ void StartUp(Bool defaultScreenOnly)
 				}
 			}
 		}
+#endif
 
 		/* go to workspace where we were before restart */
 		if (lastDesktop >= 0)
@@ -862,7 +870,9 @@ static void manageAllWindows(WScreen * scr, int crashRecovery)
 	}
 	scr->last_workspace = 0;
 	wWorkspaceForceChange(scr, 0);
+#ifdef ORIGINAL_WMAKER
 	if (!wPreferences.flags.noclip)
 		wDockShowIcons(scr->workspaces[scr->current_workspace]->clip);
+#endif
 	scr->flags.startup2 = 0;
 }
