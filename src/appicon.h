@@ -46,9 +46,11 @@ typedef struct WAppIcon {
 	char *wm_instance;
 	pid_t pid;			 /* for apps launched from the dock */
 	Window main_window;
+#ifdef ORIGINAL_WMAKER
 	struct WDock *dock;		 /* In which dock is docked. */
 	struct _AppSettingsPanel *panel; /* Settings Panel */
 	unsigned int docked:1;
+#endif
 	unsigned int omnipresent:1;	 /* If omnipresent when
 					  * docked in clip */
 	unsigned int attracted:1;	 /* If it was attracted by the clip */
@@ -68,8 +70,10 @@ typedef struct WAppIcon {
 	unsigned int lock:1;		 /* do not allow to be destroyed */
 } WAppIcon;
 
+#ifdef ORIGINAL_WMAKER
 WAppIcon *wAppIconCreateForDock(WScreen *scr, const char *command, const char *wm_instance,
 				const char *wm_class, int tile);
+#endif
 Bool wHandleAppIconMove(WAppIcon *aicon, XEvent *event);
 
 void wAppIconDestroy(WAppIcon *aicon);
@@ -77,7 +81,9 @@ void wAppIconPaint(WAppIcon *aicon);
 void wAppIconMove(WAppIcon *aicon, int x, int y);
 void create_appicon_for_application(WApplication *wapp, WWindow *wwin);
 void removeAppIconFor(WApplication * wapp);
+#ifdef ORIGINAL_WMAKER
 void save_appicon(WAppIcon *aicon);
+#endif
 void paint_app_icon(WApplication *wapp);
 void unpaint_app_icon(WApplication *wapp);
 void wApplicationExtractDirPackIcon(const char *path, const char *wm_instance,

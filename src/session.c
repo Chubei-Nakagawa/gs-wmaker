@@ -240,26 +240,22 @@ static WMPropList *makeWindowState(WWindow * wwin, WApplication * wapp)
 		WMReleasePropList(maximized);
 		WMReleasePropList(geometry);
 		WMReleasePropList(shortcut);
+#ifdef ORIGINAL_WMAKER			
 		if (wapp && wapp->app_icon && wapp->app_icon->dock) {
 			int i;
 			char *name = NULL;
-#ifdef ORIGINAL_WMAKER			
 			if (wapp->app_icon->dock == scr->dock)
 				name = "Dock";
-#endif
 
 			/* Try the clips */
 			if (name == NULL) {
-#ifdef ORIGINAL_WMAKER
 				for (i = 0; i < scr->workspace_count; i++)
 					if (scr->workspaces[i]->clip == wapp->app_icon->dock)
 						break;
-#endif
 				if (i < scr->workspace_count)
 					name = scr->workspaces[i]->name;
 			}
 			/* Try the drawers */
-#ifdef ORIGINAL_WMAKER
 			if (name == NULL) {
 				WDrawerChain *dc;
 				for (dc = scr->drawers; dc != NULL; dc = dc->next) {
@@ -270,10 +266,10 @@ static WMPropList *makeWindowState(WWindow * wwin, WApplication * wapp)
 				name = dc->adrawer->icon_array[0]->wm_instance;
 			}
 			dock = WMCreatePLString(name);
-#endif
 			WMPutInPLDictionary(win_state, sDock, dock);
 			WMReleasePropList(dock);
 		}
+#endif
 	} else {
 		win_state = NULL;
 	}

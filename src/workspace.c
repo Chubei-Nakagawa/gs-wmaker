@@ -690,6 +690,7 @@ static void switchWSCommand(WMenu * menu, WMenuEntry * entry)
 	wWorkspaceChange(menu->frame->screen_ptr, (long)entry->clientdata);
 }
 
+#ifdef ORIGINAL_WMAKER
 static void lastWSCommand(WMenu *menu, WMenuEntry *entry)
 {
 	/* Parameter not used, but tell the compiler that it is ok */
@@ -719,6 +720,7 @@ static void newWSCommand(WMenu *menu, WMenuEntry *foo)
 	if (ws >= 0)
 		wWorkspaceChange(menu->frame->screen_ptr, ws);
 }
+#endif
 
 void wWorkspaceRename(WScreen *scr, int workspace, const char *name)
 {
@@ -766,6 +768,7 @@ void wWorkspaceRename(WScreen *scr, int workspace, const char *name)
 	WMPostNotificationName(WMNWorkspaceNameChanged, scr, (void *)(uintptr_t) workspace);
 }
 
+#ifdef ORIGINAL_WMAKER
 /* callback for when menu entry is edited */
 static void onMenuEntryEdited(WMenu * menu, WMenuEntry * entry)
 {
@@ -775,7 +778,6 @@ static void onMenuEntryEdited(WMenu * menu, WMenuEntry * entry)
 	wWorkspaceRename(menu->frame->screen_ptr, (long)entry->clientdata, tmp);
 }
 
-#ifdef ORIGINAL_WMAKER
 WMenu *wWorkspaceMenuMake(WScreen * scr, Bool titled)
 {
 	WMenu *wsmenu;

@@ -22,6 +22,7 @@
 #define WMDOCKEDAPP_H_
 
 
+#ifdef ORIGINAL_WMAKER
 typedef struct _AppSettingsPanel {
 	WMWindow *win;
 	WAppIcon *editedIcon;
@@ -61,5 +62,6 @@ typedef struct _AppSettingsPanel {
 
 void DestroyDockAppSettingsPanel(AppSettingsPanel *panel);
 void ShowDockAppSettingsPanel(WAppIcon *aicon);
+#endif
 
 #endif

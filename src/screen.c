@@ -1015,6 +1015,8 @@ void wScreenSaveState(WScreen * scr)
 	if (foo != NULL)
 		WMPutInPLDictionary(scr->session_state, dClip, foo);
 
+	wWorkspaceSaveState(scr, old_state);
+
 	foo = WMGetFromPLDictionary(old_state, dDrawers);
 	if (foo != NULL)
 		WMPutInPLDictionary(scr->session_state, dDrawers, foo);

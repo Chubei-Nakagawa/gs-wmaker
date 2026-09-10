@@ -21,13 +21,13 @@
 #ifndef _WAPPMENU_H_
 #define _WAPPMENU_H_
 
-WMenu *wAppMenuGet(WScreen *scr, Window window);
 #ifdef ORIGINAL_WMAKER
+WMenu *wAppMenuGet(WScreen *scr, Window window);
 void wAppMenuDestroy(WMenu *menu);
 
 void wAppMenuMap(WMenu *menu, WWindow *wwin);
-#endif
 void wAppMenuUnmap(WMenu *menu);
+#endif
 
 
 #endif

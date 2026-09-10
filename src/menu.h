@@ -143,7 +143,9 @@ void wMenuMap(WMenu *menu);
 void wMenuMapAt(WMenu *menu, int x, int y, int keyboard);
 #define wMenuMapCopyAt(menu, x, y) wMenuMapAt((menu)->brother, (x), (y), False)
 void wMenuUnmap(WMenu *menu);
+#ifdef ORIGINAL_WMAKER
 void wMenuSetEnabled(WMenu *menu, int index, int enable);
+#endif
 void wMenuMove(WMenu *menu, int x, int y, int submenus);
 void wMenuEntryRemoveCascade(WMenu *menu, WMenuEntry *entry);
 #ifdef ORIGINAL_WMAKER

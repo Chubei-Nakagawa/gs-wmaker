@@ -18,6 +18,7 @@
  *  with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
+#ifdef ORIGINAL_WMAKER
 #include "wconfig.h"
 
 #include <X11/Xlib.h>
@@ -81,7 +82,6 @@ static void notifyClient(WMenu * menu, WMenuEntry * entry)
 	sendMessage(data->window, wmSelectItem, data->tag);
 }
 
-#ifdef ORIGINAL_WMAKER
 static WMenu *parseMenuCommand(WScreen * scr, Window win, char **slist, int count, int *index)
 {
 	WMenu *menu;
@@ -199,7 +199,6 @@ static WMenu *parseMenuCommand(WScreen * scr, Window win, char **slist, int coun
 
 	return menu;
 }
-#endif
 
 WMenu *wAppMenuGet(WScreen * scr, Window window)
 {
@@ -223,24 +222,20 @@ WMenu *wAppMenuGet(WScreen * scr, Window window)
 	}
 
 	i = 1;
-#ifdef ORIGINAL_WMAKER
 	menu = parseMenuCommand(scr, window, slist, count, &i);
 	if (menu)
 		menu->parent = NULL;
-#endif
 
 	XFreeStringList(slist);
 
 	return menu;
 }
 
-#ifdef ORIGINAL_WMAKER
 void wAppMenuDestroy(WMenu * menu)
 {
 	if (menu)
 		wMenuDestroy(menu, True);
 }
-#endif
 
 static void mapmenus(WMenu * menu)
 {
@@ -256,7 +251,6 @@ static void mapmenus(WMenu * menu)
 	}
 }
 
-#ifdef ORIGINAL_WMAKER
 void wAppMenuMap(WMenu * menu, WWindow * wwin)
 {
 
@@ -280,7 +274,6 @@ void wAppMenuMap(WMenu * menu, WWindow * wwin)
 	mapmenus(menu);
 
 }
-#endif
 
 static void unmapmenus(WMenu * menu)
 {
@@ -301,3 +294,4 @@ void wAppMenuUnmap(WMenu * menu)
 	if (menu)
 		unmapmenus(menu);
 }
+#endif

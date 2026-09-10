@@ -20,8 +20,8 @@
  *  with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-#include "wconfig.h"
 #ifdef ORIGINAL_WMAKER
+#include "wconfig.h"
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
@@ -121,13 +121,9 @@ static void drawerIconExpose(WObjDescriptor *desc, XEvent *event);
 static void removeDrawerCallback(WMenu *menu, WMenuEntry *entry);
 static void drawerAppendToChain(WScreen *scr, WDock *drawer);
 static char *findUniqueName(WScreen *scr, const char *instance_basename);
-#ifdef ORIGINAL_WMAKER
 static void addADrawerCallback(WMenu *menu, WMenuEntry *entry);
-#endif
 static void swapDrawers(WScreen *scr, int new_x);
-#ifdef ORIGINAL_WMAKER
 static WDock* getDrawer(WScreen *scr, int y_index);
-#endif
 static int indexOfHole(WDock *drawer, WAppIcon *moving_aicon, int redocking);
 static void drawerConsolidateIcons(WDock *drawer);
 
@@ -543,7 +539,6 @@ static void keepIconsCallback(WMenu *menu, WMenuEntry *entry)
 
 	selectedIcons = getSelected(dock);
 
-#ifdef ORIGINAL_WMAKER
 	if (!WMGetArrayItemCount(selectedIcons)
 	    && clickedIcon != dock->screen_ptr->clip_icon) {
 		char *command = NULL;
@@ -569,7 +564,6 @@ static void keepIconsCallback(WMenu *menu, WMenuEntry *entry)
 
 		WMAddToArray(selectedIcons, clickedIcon);
 	}
-#endif
 
 	WM_ITERATE_ARRAY(selectedIcons, aicon, it) {
 		if (aicon->icon->selected)

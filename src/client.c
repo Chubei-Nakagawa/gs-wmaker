@@ -337,7 +337,11 @@ void wClientCheckProperty(WWindow * wwin, XPropertyEvent * event)
 			WApplication *wapp = wApplicationOf(wwin->main_window);
 			char *command;
 
+#ifdef ORIGINAL_WMAKER
 			if (!wapp || !wapp->app_icon || wapp->app_icon->docked)
+#else
+			if (!wapp || !wapp->app_icon)
+#endif
 				break;
 
 			command = GetCommandForWindow(wwin->main_window);
@@ -613,15 +617,19 @@ void wClientCheckProperty(WWindow * wwin, XPropertyEvent * event)
 					fPtr->leader = None;
 					fPtr->origLeader = None;
 
+#ifdef ORIGINAL_WMAKER
 					wapp = wApplicationOf(wwin->main_window);
 					if (wapp) {
 						wapp->menu = wAppMenuGet(scr, wwin->main_window);
 					}
+#endif
 					if (wPreferences.auto_arrange_icons) {
 						wArrangeIcons(wwin->screen_ptr, True);
 					}
+#ifdef ORIGINAL_WMAKER
 				} else {
 					wapp->menu = wAppMenuGet(wwin->screen_ptr, wwin->main_window);
+#endif
 				}
 				/* make the appmenu be mapped */
 				wSetFocusTo(wwin->screen_ptr, NULL);

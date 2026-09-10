@@ -18,6 +18,7 @@
  *  with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
+#ifdef ORIGINAL_WMAKER
 #include "wconfig.h"
 
 #include <X11/Xlib.h>
@@ -180,13 +181,11 @@ static void panelBtnCallback(WMWidget * self, void *data)
 			WAppIcon *aicon = panel->editedIcon;
 
 			// Cf dock.c:dockIconPaint(WAppIcon *aicon)?
-#ifdef ORIGINAL_WMAKER
 			if (aicon == aicon->icon->core->screen_ptr->clip_icon)
 				wClipIconPaint(aicon);
 			else if (wIsADrawer(aicon))
 				wDrawerIconPaint(aicon);
 			else
-#endif
 				wAppIconPaint(aicon);
 
 			wDefaultChangeIcon(aicon->wm_instance, aicon->wm_class, text);
@@ -399,7 +398,6 @@ void ShowDockAppSettingsPanel(WAppIcon * aicon)
 		else if (y + pheight > rect.pos.y + rect.size.height)
 			y = rect.pos.y + rect.size.height - pheight - 3 * WMScaleY(10);
 
-#ifdef ORIGINAL_WMAKER
 		if (aicon->dock && aicon->dock->type == WM_DOCK) {
 			if (aicon->dock->on_right_side)
 				x = rect.pos.x + rect.size.width / 2;
@@ -408,9 +406,6 @@ void ShowDockAppSettingsPanel(WAppIcon * aicon)
 		} else {
 			x = rect.pos.x + (rect.size.width - pwidth) / 2;
 		}
-#else
-		x = rect.pos.x + (rect.size.width - pwidth) / 2;
-#endif
 	}
 
 	panel->wwin = wManageInternalWindow(scr, parent, None,
@@ -454,3 +449,4 @@ void DestroyDockAppSettingsPanel(AppSettingsPanel * panel)
 
 	wfree(panel);
 }
+#endif

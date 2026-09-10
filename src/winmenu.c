@@ -50,7 +50,9 @@
 
 static WMenu *makeWorkspaceMenu(WScreen *scr);
 static WMenu *makeOptionsMenu(WScreen *scr);
+#ifdef ORIGINAL_WMAKER
 static WMenu *makeMaximizeMenu(WScreen *scr);
+#endif
 
 /*
  * Define the Menu entry that will be present in the Window menu
@@ -81,15 +83,21 @@ static const struct {
 	WMenu *(*generate_submenu)(WScreen *scr);
 } window_menu_entries[] = {
 	[MC_MAXIMIZE]    = { N_("Maximize"), NULL },
+#ifdef ORIGINAL_WMAKER
 	[MC_OTHERMAX]    = { N_("Other maximization"), makeMaximizeMenu },
+#endif
 	[MC_MINIATURIZE] = { N_("Miniaturize"), NULL },
 	[MC_SHADE]       = { N_("Shade"), NULL },
 	[MC_HIDE]        = { N_("Hide"), NULL },
 	[MC_MOVERESIZE]  = { N_("Resize/Move"), NULL },
 	[MC_SELECT]      = { N_("Select"), NULL },
+#ifdef ORIGINAL_WMAKER
 	[MC_CHANGEWKSPC] = { N_("Move To"), makeWorkspaceMenu },
+#endif
 	[MC_PROPERTIES]  = { N_("Attributes..."), NULL },
+#ifdef ORIGINAL_WMAKER
 	[MC_OPTIONS]     = { N_("Options"), makeOptionsMenu },
+#endif
 	[MC_RELAUNCH]    = { N_("Launch"), NULL },
 	[MC_CLOSE]       = { N_("Close"), NULL },
 	[MC_KILL]        = { N_("Kill"), NULL }
@@ -238,14 +246,13 @@ static void updateUnmaximizeShortcut(WMenuEntry * entry, int flags)
 	entry->rtext = GetShortcutKey(wKeyBindings[key]);
 }
 
+#ifdef ORIGINAL_WMAKER
 static void execMenuCommand(WMenu * menu, WMenuEntry * entry)
 {
 	WWindow *wwin = (WWindow *) entry->clientdata;
 	WApplication *wapp;
 
-#ifdef ORIGINAL_WMAKER
 	CloseWindowMenu(menu->frame->screen_ptr);
-#endif
 
 	switch (entry->order) {
 	case MC_CLOSE:
@@ -517,7 +524,6 @@ static void updateMaximizeMenu(WMenu * menu, WWindow * wwin)
 	wMenuRealize(smenu);
 }
 
-#ifdef ORIGINAL_WMAKER
 static WMenu *makeWorkspaceMenu(WScreen * scr)
 {
 	WMenu *menu;

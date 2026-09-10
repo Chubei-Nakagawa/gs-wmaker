@@ -107,6 +107,7 @@ void wApplicationExtractDirPackIcon(const char *path, const char *wm_instance, c
 	}
 }
 
+#ifdef ORIGINAL_WMAKER
 WAppIcon *wAppIconCreateForDock(WScreen *scr, const char *command, const char *wm_instance, const char *wm_class, int tile)
 {
 	WAppIcon *aicon;
@@ -144,6 +145,7 @@ WAppIcon *wAppIconCreateForDock(WScreen *scr, const char *command, const char *w
 
 	return aicon;
 }
+#endif
 
 void create_appicon_for_application(WApplication *wapp, WWindow *wwin)
 {
@@ -167,12 +169,14 @@ void create_appicon_for_application(WApplication *wapp, WWindow *wwin)
 			paint_app_icon(wapp);
 	}
 
+#ifdef ORIGINAL_WMAKER
 	/* At this point the application is fully set up and all icon and
 	 * window data are known - so try to save the icon file for docked
 	 * applications to ensure that the file exists when window maker
 	 * starts up next time. */
 	if (wapp->app_icon->docked && !WFLAGP(wapp->main_window_desc, no_appicon))
 		save_appicon(wapp->app_icon);
+#endif
 }
 
 void unpaint_app_icon(WApplication *wapp)
@@ -188,9 +192,11 @@ void unpaint_app_icon(WApplication *wapp)
 
 	aicon = wapp->app_icon;
 
+#ifdef ORIGINAL_WMAKER
 	/* If the icon is docked, don't continue */
 	if (aicon->docked)
 		return;
+#endif
 
 	scr = wapp->main_window_desc->screen_ptr;
 #ifdef ORIGINAL_WMAKER
@@ -226,11 +232,11 @@ void paint_app_icon(WApplication *wapp)
 	scr = wapp->main_window_desc->screen_ptr;
 	wapp->app_icon->main_window = wapp->main_window;
 
+#ifdef ORIGINAL_WMAKER
 	/* If the icon is docked, don't continue */
 	if (wapp->app_icon->docked)
 		return;
 
-#ifdef ORIGINAL_WMAKER
 	attracting_dock = scr->attracting_drawer != NULL ?
 		scr->attracting_drawer :
 		scr->workspaces[scr->current_workspace]->clip;
@@ -460,6 +466,7 @@ void wAppIconPaint(WAppIcon *aicon)
 			       0, 0, wPreferences.icon_size, wPreferences.icon_size);
 }
 
+#ifdef ORIGINAL_WMAKER
 /* Save the application icon, if it's a dockapp then use it with dock = True */
 void save_appicon(WAppIcon *aicon)
 {
@@ -478,6 +485,7 @@ void save_appicon(WAppIcon *aicon)
 	wApplicationSaveIconPathFor(path, aicon->wm_instance, aicon->wm_class);
 	wfree(path);
 }
+#endif
 
 #define canBeDocked(wwin)  ((wwin) && ((wwin)->wm_class||(wwin)->wm_instance))
 
@@ -764,10 +772,12 @@ void appIconMouseDown(WObjDescriptor * desc, XEvent * event)
 	}
 
 	hasMoved = wHandleAppIconMove(aicon, event);
+#ifdef ORIGINAL_WMAKER
 	if (wPreferences.single_click && !hasMoved && aicon->dock != NULL)
 	{
 		iconDblClick(desc, event);
 	}
+#endif
 }
 
 Bool wHandleAppIconMove(WAppIcon *aicon, XEvent *event)

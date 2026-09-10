@@ -282,13 +282,17 @@ static int bounceDirection(WAppIcon *aicon)
 		v = b;
 	}
 
+#ifdef ORIGINAL_WMAKER
 	if (aicon->dock && abs(aicon->xindex) != abs(aicon->yindex)) {
 		if (abs(aicon->xindex) < abs(aicon->yindex)) dir &= ~(top_e | bottom_e);
 		else dir &= ~(left_e | right_e);
 	} else {
+#endif
 		if (h < v) dir &= ~(top_e | bottom_e);
 		else dir &= ~(left_e | right_e);
+#ifdef ORIGINAL_WMAKER
 	}
+#endif
 
 	switch (dir) {
 	case left_e:

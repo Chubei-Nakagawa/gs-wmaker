@@ -1770,7 +1770,9 @@ void wUnmanageWindow(WWindow *wwin, Bool restore, Bool destroyed)
 	WApplication *oapp = wApplicationOf(wwin->main_window);
 	WApplication *napp = scr->focused_window ? wApplicationOf(scr->focused_window->main_window) : NULL;
 	if (oapp && oapp != napp) {
+#ifdef ORIGINAL_WMAKER
 		wAppMenuUnmap(oapp->menu);
+#endif
 		if (wPreferences.highlight_active_app)
 			wApplicationDeactivate(oapp);
 	}

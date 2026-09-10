@@ -147,7 +147,9 @@ void wSetFocusTo(WScreen *scr, WWindow *wwin)
 			wWindowUnfocus(old_focused);
 
 		if (oapp) {
+#ifdef ORIGINAL_WMAKER
 			wAppMenuUnmap(oapp->menu);
+#endif
 			if (wPreferences.highlight_active_app)
 				wApplicationDeactivate(oapp);
 		}
@@ -211,7 +213,9 @@ void wSetFocusTo(WScreen *scr, WWindow *wwin)
 		scr->focused_window = wwin;
 
 		if (oapp && oapp != napp) {
+#ifdef ORIGINAL_WMAKER
 			wAppMenuUnmap(oapp->menu);
+#endif
 			if (wPreferences.highlight_active_app)
 				wApplicationDeactivate(oapp);
 		}
@@ -2241,8 +2245,11 @@ void wArrangeIcons(WScreen *scr, Bool arrangeAll)
 		aicon = aicon->next;
 
 	while (aicon) {
+#ifdef ORIGINAL_WMAKER
 		if (!aicon->docked) {
-			/* CHECK: can icon be NULL here ? */
+#else
+		{
+#endif			/* CHECK: can icon be NULL here ? */
 			/* The intention here is to place the AppIcon on the head that
 			 * contains most of the applications _main_ window. */
 			head = wGetHeadForWindow(aicon->icon->owner);
